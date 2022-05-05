@@ -14,7 +14,7 @@ namespace WikibaseSolutions\MediaWikiTemplateParser;
  * A blazing fast parser for MediaWiki.
  *
  * @package WikibaseSolutions\MediaWikiTemplateParser
- * @deprecated Use RecursiveParser instead
+ * @deprecated Use RecursiveParser instead, hard deprecated.
  * @see RecursiveParser
  */
 class Parser
