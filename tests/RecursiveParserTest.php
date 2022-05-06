@@ -754,7 +754,39 @@ class RecursiveParserTest extends TestCase
 					}}
 					TEMPLATE
 				]
-			]
+			],
+            'parameter with default' => [
+                '{{Example|{{{Param1|Default1}}}|Arg1}}',
+                [
+                    'Example' => [
+                        [
+                            '1' => [
+                                '_text' => '{{{Param1|Default1}}}'
+                            ],
+                            '2' => [
+                                '_text' => 'Arg1'
+                            ]
+                        ]
+                    ],
+                    '_text' => '{{Example|{{{Param1|Default1}}}|Arg1}}'
+                ]
+            ],
+            'parameter with template as default' => [
+                '{{Example|{{{Param1|{{Example2|Arg1}}}}}|Arg1}}',
+                [
+                    'Example' => [
+                        [
+                            '1' => [
+                                '_text' => '{{{Param1|{{Example2|Arg1}}}}}'
+                            ],
+                            '2' => [
+                                '_text' => 'Arg1'
+                            ]
+                        ]
+                    ],
+                    '_text' => '{{Example|{{{Param1|{{Example2|Arg1}}}}}|Arg1}}'
+                ]
+            ]
 		];
 	}
 }
