@@ -18,6 +18,7 @@ use WikibaseSolutions\MediaWikiTemplateParser\Parser;
  *
  * @covers \WikibaseSolutions\MediaWikiTemplateParser\Parser
  * @package WikibaseSolutions\MediaWikiTemplateParser\Tests
+ * @group Unit
  */
 class ParserTest extends TestCase
 {

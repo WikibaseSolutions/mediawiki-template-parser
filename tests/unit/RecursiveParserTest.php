@@ -18,6 +18,7 @@ use WikibaseSolutions\MediaWikiTemplateParser\RecursiveParser;
  *
  * @covers \WikibaseSolutions\MediaWikiTemplateParser\RecursiveParser
  * @package WikibaseSolutions\MediaWikiTemplateParser\Tests
+ * @group Unit
  */
 class RecursiveParserTest extends TestCase
 {
@@ -771,7 +772,7 @@ class RecursiveParserTest extends TestCase
                     '_text' => '{{Example|{{{Param1|Default1}}}|Arg1}}'
                 ]
             ],
-            'parameter with template as default' => [
+            'parameter with template as default 1' => [
                 '{{Example|{{{Param1|{{Example2|Arg1}}}}}|Arg1}}',
                 [
                     'Example' => [
@@ -785,6 +786,64 @@ class RecursiveParserTest extends TestCase
                         ]
                     ],
                     '_text' => '{{Example|{{{Param1|{{Example2|Arg1}}}}}|Arg1}}'
+                ]
+            ],
+            'parameter with template as default 2' => [
+                '{{Example|{{{Param1|{{Example2|Arg1}}}}}{{Example2}}|Arg1}}',
+                [
+                    'Example' => [
+                        [
+                            '1' => [
+                                'Example2' => [
+                                    []
+                                ],
+                                '_text' => '{{{Param1|{{Example2|Arg1}}}}}{{Example2}}'
+                            ],
+                            '2' => [
+                                '_text' => 'Arg1'
+                            ]
+                        ]
+                    ],
+                    '_text' => '{{Example|{{{Param1|{{Example2|Arg1}}}}}{{Example2}}|Arg1}}'
+                ]
+            ],
+            'parameter with empty default' => [
+                '{{Example|{{{Param1|}}}}}',
+                [
+                    'Example' => [
+                        [
+                            '1' => [
+                                '_text' => '{{{Param1|}}}'
+                            ]
+                        ]
+                    ],
+                    '_text' => '{{Example|{{{Param1|}}}}}'
+                ]
+            ],
+            'template with empty argument' => [
+                '{{Example|}}',
+                [
+                    'Example' => [
+                        [
+                            '1' => [
+                                '_text' => ''
+                            ]
+                        ]
+                    ],
+                    '_text' => '{{Example|}}'
+                ]
+            ],
+            'template with empty named argument' => [
+                '{{Example|Name1=}}',
+                [
+                    'Example' => [
+                        [
+                            'Name1' => [
+                                '_text' => ''
+                            ]
+                        ]
+                    ],
+                    '_text' => '{{Example|Name1=}}'
                 ]
             ]
 		];
