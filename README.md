@@ -1,6 +1,6 @@
 # wikibase-solutions/mediawiki-template-processor
 
-Provides a parser for MediaWiki articles to extract top-level template calls.
+Provides a parser for MediaWiki articles to extract template calls.
 
 ## Installation
 
