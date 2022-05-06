@@ -16,9 +16,9 @@ use WikibaseSolutions\MediaWikiTemplateParser\Parser;
 /**
  * Class ParserTest
  *
- * @covers \WikibaseSolutions\MediaWikiTemplateParser\Parser
+ * @covers  \WikibaseSolutions\MediaWikiTemplateParser\Parser
  * @package WikibaseSolutions\MediaWikiTemplateParser\Tests
- * @group Unit
+ * @group   Unit
  */
 class ParserTest extends TestCase
 {
@@ -37,8 +37,8 @@ class ParserTest extends TestCase
 
     /**
      * @dataProvider provideParserData
-     * @param string $source
-     * @param array $expected
+     * @param        string $source
+     * @param        array  $expected
      */
     public function testParser(string $source, array $expected): void
     {

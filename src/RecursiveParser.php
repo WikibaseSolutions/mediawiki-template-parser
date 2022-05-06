@@ -15,35 +15,38 @@ namespace WikibaseSolutions\MediaWikiTemplateParser;
  *
  * @package WikibaseSolutions\MediaWikiTemplateParser
  */
-class RecursiveParser {
-	public const TEXT_KEY = '_text';
+class RecursiveParser
+{
+    public const TEXT_KEY = '_text';
 
-	private const TEMPLATE_START = '{{';
-	private const PARAM_START = '{{{';
+    private const TEMPLATE_START = '{{';
+    private const PARAM_START = '{{{';
 
-	/**
+    /**
      * Parses the given wikitext.
      *
-     * @param string $source
+     * @param  string $source
      * @return array
      */
-    public function parse(string $source): array {
+    public function parse(string $source): array
+    {
         $templates = $this->parseTemplates($this->findTemplates($source));
-		$templates[self::TEXT_KEY] = trim($source);
+        $templates[self::TEXT_KEY] = trim($source);
 
-		return $templates;
+        return $templates;
     }
 
-	/**
-	 * Parses the given templates into an associative array.
-	 *
-	 * @param string[] $sources The sources of the templates to parse
-	 * @return array
-	 */
-	private function parseTemplates(array $sources): array {
-		$templates = [];
+    /**
+     * Parses the given templates into an associative array.
+     *
+     * @param  string[] $sources The sources of the templates to parse
+     * @return array
+     */
+    private function parseTemplates(array $sources): array
+    {
+        $templates = [];
 
-		foreach ($sources as $source) {
+        foreach ($sources as $source) {
             // Remove the braces around the template
             $source = substr($source, 2, -2);
 
@@ -62,19 +65,20 @@ class RecursiveParser {
                 $arguments[$argumentName] = $this->parse($argumentParts[0]);
             }
 
-			$templates[$templateName][] = $arguments;
-		}
+            $templates[$templateName][] = $arguments;
+        }
 
-		return $templates;
-	}
+        return $templates;
+    }
 
     /**
      * Parses a template and splits it based on arguments, while respecting nested templates.
      *
-     * @param string $template
+     * @param  string $template
      * @return string[] The arguments in the array
      */
-	private function splitArguments(string $template): array {
+    private function splitArguments(string $template): array
+    {
         $numChars = strlen($template);
 
         $idx = 0;
@@ -103,13 +107,14 @@ class RecursiveParser {
         $arguments[] = $argument;
 
         return $arguments;
-	}
+    }
 
     /**
-     * @param string $source The source to find templates in
+     * @param  string $source The source to find templates in
      * @return array
      */
-    private function findTemplates(string $source): array {
+    private function findTemplates(string $source): array
+    {
         $numChars = strlen($source);
 
         $idx = 0;
@@ -139,13 +144,14 @@ class RecursiveParser {
      * Matches the number of braces and returns the result. This function expects the given index to start at the
      * specified number of braces in the given source.
      *
-     * @param string $source The source to match braces in
-     * @param int $numChars The number of characters in $source
-     * @param int $idx The index to start matching
-     * @param int $numBraces The number of braces to match
+     * @param  string $source    The source to match braces in
+     * @param  int    $numChars  The number of characters in $source
+     * @param  int    $idx       The index to start matching
+     * @param  int    $numBraces The number of braces to match
      * @return string
      */
-    private function matchBraces(string $source, int $numChars, int &$idx, int $numBraces): string {
+    private function matchBraces(string $source, int $numChars, int &$idx, int $numBraces): string
+    {
         $idx += $numBraces;
 
         $match = str_repeat('{', $numBraces);
@@ -181,10 +187,11 @@ class RecursiveParser {
     /**
      * Checks if the given source is a valid template.
      *
-     * @param string $source
+     * @param  string $source
      * @return bool
      */
-    private function isTemplate(string $source): bool {
+    private function isTemplate(string $source): bool
+    {
         return strlen($source) >= 5 && // Check if it as least five characters ({{<identifier>}})
             $source[0] === '{' && $source[1] === '{' && // Check if it starts with "{{"
             $source[-1] === '}' && $source[-2] === '}' && // Check if it ends with "}}"

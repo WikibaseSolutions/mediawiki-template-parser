@@ -16,9 +16,9 @@ use WikibaseSolutions\MediaWikiTemplateParser\RecursiveParser;
 /**
  * Class RecursiveParserTest
  *
- * @covers \WikibaseSolutions\MediaWikiTemplateParser\RecursiveParser
+ * @covers  \WikibaseSolutions\MediaWikiTemplateParser\RecursiveParser
  * @package WikibaseSolutions\MediaWikiTemplateParser\Tests
- * @group Fuzz
+ * @group   Fuzz
  */
 class RecursiveParserFuzzTest extends TestCase
 {
@@ -45,9 +45,9 @@ class RecursiveParserFuzzTest extends TestCase
      */
     public function testParserFuzz(): void
     {
-       for ($i = 0; $i < self::NUM_FUZZ_TESTS; $i++) {
-           $this->parser->parse($this->generateFuzzData());
-       }
+        for ($i = 0; $i < self::NUM_FUZZ_TESTS; $i++) {
+            $this->parser->parse($this->generateFuzzData());
+        }
     }
 
     /**

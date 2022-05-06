@@ -13,9 +13,9 @@ namespace WikibaseSolutions\MediaWikiTemplateParser;
 /**
  * A blazing fast parser for MediaWiki.
  *
- * @package WikibaseSolutions\MediaWikiTemplateParser
+ * @package    WikibaseSolutions\MediaWikiTemplateParser
  * @deprecated Use RecursiveParser instead, hard deprecated.
- * @see RecursiveParser
+ * @see        RecursiveParser
  */
 class Parser
 {
@@ -41,7 +41,7 @@ class Parser
      *     ]
      * ]
      *
-     * @param string $articleSource
+     * @param  string $articleSource
      * @return array
      */
     public function parseArticle(string $articleSource): array
@@ -55,7 +55,7 @@ class Parser
     /**
      * Finds all the templates on a page. This function takes nested templates into account.
      *
-     * @param string $articleSource
+     * @param  string $articleSource
      * @return array
      */
     protected function findTemplates(string $articleSource): array
@@ -111,7 +111,7 @@ class Parser
     /**
      * Check if this is a valid template.
      *
-     * @param string $templateSource
+     * @param  string $templateSource
      * @return bool
      */
     private function isValidTemplate(string $templateSource): bool
@@ -138,7 +138,7 @@ class Parser
     /**
      * Parses the given template sources.
      *
-     * @param array $templateSources
+     * @param  array $templateSources
      * @return array
      */
     protected function parseTemplates(array $templateSources): array
@@ -157,7 +157,7 @@ class Parser
      * Parses a single template. It first removes the accolades from the template, then splits the template by
      * arguments.
      *
-     * @param string $template
+     * @param  string $template
      * @return array
      */
     protected function parseTemplate(string $template): array
@@ -183,7 +183,7 @@ class Parser
     /**
      * Parses a template and splits it based on arguments, while respecting (nesting) multiple-instance templates.
      *
-     * @param string $template
+     * @param  string $template
      * @return array
      */
     protected function tokenizeTemplate(string $template): array
@@ -218,7 +218,7 @@ class Parser
     /**
      * Parses a template argument.
      *
-     * @param string $argument
+     * @param  string $argument
      * @return array
      */
     protected function parseArgument(string $argument): array
