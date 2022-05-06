@@ -11,10 +11,10 @@
         bootstrap="./vendor/autoload.php">
     <testsuites>
         <testsuite name="Unit">
-            <directory>./tests/</directory>
+            <directory>./tests/unit/</directory>
         </testsuite>
-        <testsuite name="All">
-            <directory>./tests/</directory>
+        <testsuite name="Fuzz">
+            <directory>./tests/fuzz/</directory>
         </testsuite>
     </testsuites>
     <coverage cacheDirectory=".phpunit.cache/code-coverage"
