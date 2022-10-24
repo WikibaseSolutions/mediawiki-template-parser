@@ -21,6 +21,11 @@ class RecursiveParser
 
     private const TEMPLATE_START = '{{';
     private const PARAM_START = '{{{';
+    private const TABLE_START = '{{{!}}';
+
+    private const TEMPLATE_END = '}}';
+    private const PARAM_END = '}}}';
+    private const TABLE_END = '{{!}}}';
 
     /**
      * Parses the given wikitext.
@@ -51,7 +56,7 @@ class RecursiveParser
             $source = substr($source, 2, -2);
 
             // Tokenize the template
-            $templateParts = $this->splitArguments($source, '|');
+            $templateParts = $this->splitArguments($source);
             $templateName = trim(array_shift($templateParts));
 
             // We need to name our anonymous arguments using their numeric identifier
@@ -86,12 +91,16 @@ class RecursiveParser
         $argument = '';
 
         while ($idx < $numChars) {
-            if (substr($template, $idx, 3) === self::PARAM_START) {
+            if (substr($template, $idx, 6) === self::TABLE_START) {
+                // We found a table
+                $idx += 6;
+                $argument .= self::TABLE_START;
+            } elseif (substr($template, $idx, 3) === self::PARAM_START) {
                 // We found a parameter on which we should not split
-                $argument .= $this->matchBraces($template, $numChars, $idx, 3);
+                $argument .= $this->match($template, $numChars, $idx, self::PARAM_START, self::PARAM_END);
             } elseif (substr($template, $idx, 2) === self::TEMPLATE_START) {
                 // We found a template on which we should not split
-                $argument .= $this->matchBraces($template, $numChars, $idx, 2);
+                $argument .= $this->match($template, $numChars, $idx, self::TEMPLATE_START, self::TEMPLATE_END);
             } elseif ($template[$idx] === '|') {
                 // Split when we encounter the delimiter
                 $arguments[] = $argument;
@@ -115,19 +124,21 @@ class RecursiveParser
      */
     private function findTemplates(string $source): array
     {
-        $source = str_replace( '{{!}}', '|', $source );
         $numChars = strlen($source);
 
         $idx = 0;
         $templates = [];
 
         while ($idx < $numChars) {
-            if (substr($source, $idx, 3) === self::PARAM_START) {
+            if (substr($source, $idx, 6) === self::TABLE_START) {
+                // We found a table which we need to consume first
+                $this->match($source, $numChars, $idx, self::TABLE_START, self::TABLE_END);
+            } elseif (substr($source, $idx, 3) === self::PARAM_START) {
                 // Skip the parameter (and possibly any nested templates inside it)
-                $this->matchBraces($source, $numChars, $idx, 3);
+                $this->match($source, $numChars, $idx, self::PARAM_START, self::PARAM_END);
             } elseif (substr($source, $idx, 2) === self::TEMPLATE_START) {
                 // We are at the start of a template, consume it and continue
-                $template = $this->matchBraces($source, $numChars, $idx, 2);
+                $template = $this->match($source, $numChars, $idx, self::TEMPLATE_START, self::TEMPLATE_END);
 
                 // Check if it is actually a template and not something like a parser function
                 if ($this->isTemplate($template)) {
@@ -145,31 +156,36 @@ class RecursiveParser
      * Matches the number of braces and returns the result. This function expects the given index to start at the
      * specified number of braces in the given source.
      *
-     * @param  string $source    The source to match braces in
-     * @param  int    $numChars  The number of characters in $source
-     * @param  int    $idx       The index to start matching
-     * @param  int    $numBraces The number of braces to match
+     * @param string $source The source to match braces in
+     * @param int $numChars The number of characters in $source
+     * @param int $idx The index to start matching
+     * @param string $start
+     * @param string $end
      * @return string
      */
-    private function matchBraces(string $source, int $numChars, int &$idx, int $numBraces): string
+    private function match(string $source, int $numChars, int &$idx, string $start, string $end): string
     {
-        $idx += $numBraces;
+        $lenStart = strlen($start);
+        $lenEnd = strlen($end);
 
-        $match = str_repeat('{', $numBraces);
-        $matchEnd = str_repeat('}', $numBraces);
+        $idx += $lenStart;
+        $match = $start;
 
         while ($idx < $numChars) {
-            if (substr($source, $idx, $numBraces) === $matchEnd) {
+            if (substr($source, $idx, $lenEnd) === $end) {
                 // We're at the end of the braces, break
                 break;
             }
 
-            if (substr($source, $idx, 3) === self::PARAM_START) {
+            if (substr($source, $idx, 6) === self::TABLE_START) {
+                // We found a table which we need to consume first
+                $match .= $this->match($source, $numChars, $idx, self::TABLE_START, self::TABLE_END);
+            } elseif (substr($source, $idx, 3) === self::PARAM_START) {
                 // We found a parameter which we need to consume first
-                $match .= $this->matchBraces($source, $numChars, $idx, 3);
+                $match .= $this->match($source, $numChars, $idx, self::PARAM_START, self::PARAM_END);
             } elseif (substr($source, $idx, 2) === self::TEMPLATE_START) {
                 // We found a template which we need to consume first
-                $match .= $this->matchBraces($source, $numChars, $idx, 2);
+                $match .= $this->match($source, $numChars, $idx, self::TEMPLATE_START, self::TEMPLATE_END);
             } else {
                 // We didn't encounter anything special
                 $match .= $source[$idx];
@@ -179,8 +195,8 @@ class RecursiveParser
         }
 
         // End at the last brace
-        $idx += $numBraces - 1;
-        $match .= $matchEnd;
+        $idx += $lenEnd - 1;
+        $match .= $end;
 
         return $match;
     }
