@@ -115,6 +115,7 @@ class RecursiveParser
      */
     private function findTemplates(string $source): array
     {
+        $source = str_replace( '{{!}}', '|', $source );
         $numChars = strlen($source);
 
         $idx = 0;
