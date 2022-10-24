@@ -92,8 +92,10 @@ class RecursiveParser
 
         while ($idx < $numChars) {
             if (substr($template, $idx, 6) === self::TABLE_START) {
-                // We found a table
-                $idx += 6;
+                // We found a table on which we should split, and thus we should not see it as the start of a parameter
+                // or a template. This check therefore skips the template start and then continues parsing the parameter
+                // body as normal.
+                $idx += 5;
                 $argument .= self::TABLE_START;
             } elseif (substr($template, $idx, 3) === self::PARAM_START) {
                 // We found a parameter on which we should not split
@@ -210,6 +212,7 @@ class RecursiveParser
     private function isTemplate(string $source): bool
     {
         return strlen($source) >= 5 && // Check if it as least five characters ({{<identifier>}})
+            $source !== '{{!}}' && // The pipe 'template' is actually a very special magic word
             $source[0] === '{' && $source[1] === '{' && // Check if it starts with "{{"
             $source[-1] === '}' && $source[-2] === '}' && // Check if it ends with "}}"
             $source[2] !== "#"; // Check if it is not a parser function

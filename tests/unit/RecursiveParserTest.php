@@ -845,6 +845,58 @@ class RecursiveParserTest extends TestCase
                     ],
                     '_text' => '{{Example|Name1=}}'
                 ]
+            ],
+            'template with table' => [
+                '{{Example|Content={{{!}} table {{!}}}}}',
+                [
+                    'Example' => [
+                        [
+                            'Content' => [
+                                '_text' => '{{{!}} table {{!}}}'
+                            ]
+                        ]
+                    ],
+                    '_text' => '{{Example|Content={{{!}} table {{!}}}}}'
+                ]
+            ],
+            'template with table with pipes' => [
+                '{{Example|Content={{{!}} table | something else {{!}}}}}',
+                [
+                    'Example' => [
+                        [
+                            'Content' => [
+                                '_text' => '{{{!}} table'
+                            ],
+                            1 => [
+                                '_text' => 'something else {{!}}}'
+                            ]
+                        ]
+                    ],
+                    '_text' => '{{Example|Content={{{!}} table | something else {{!}}}}}'
+                ]
+            ],
+            'template with table with pipes advanced' => [
+                '{{Example|Content=some text {{subtemplate|{{{!}} table {{!}}}}} {{{parameter|foo{{bar|baz}}}}} {{{!}} table | something else {{!}}}}}',
+                [
+                    'Example' => [
+                        [
+                            'Content' => [
+                                'subtemplate' => [
+                                    [
+                                        1 => [
+                                            '_text' => '{{{!}} table {{!}}}'
+                                        ]
+                                    ]
+                                ],
+                                '_text' => 'some text {{subtemplate|{{{!}} table {{!}}}}} {{{parameter|foo{{bar|baz}}}}} {{{!}} table'
+                            ],
+                            1 => [
+                                '_text' => 'something else {{!}}}'
+                            ]
+                        ]
+                    ],
+                    '_text' => '{{Example|Content=some text {{subtemplate|{{{!}} table {{!}}}}} {{{parameter|foo{{bar|baz}}}}} {{{!}} table | something else {{!}}}}}'
+                ]
             ]
         ];
     }
