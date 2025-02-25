@@ -36,7 +36,7 @@ class RecursiveParser {
 	public function parse( string $source ): array {
 		$source = $this->handlePipes( $source );
 		$templates = $this->parseTemplates( $this->findTemplates( $source ) );
-		$templates[self::TEXT_KEY] = trim( $source );
+		$templates[self::TEXT_KEY] = trim( $this->handlePipes( $source, true ) );
 
 		return $templates;
 	}
