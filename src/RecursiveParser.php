@@ -22,10 +22,12 @@ class RecursiveParser
     private const TEMPLATE_START = '{{';
     private const PARAM_START = '{{{';
     private const TABLE_START = '{{{!}}';
+    private const LINK_START = '[[';
 
     private const TEMPLATE_END = '}}';
     private const PARAM_END = '}}}';
     private const TABLE_END = '{{!}}}';
+    private const LINK_END = ']]';
 
     /**
      * Parses the given wikitext.
@@ -103,6 +105,9 @@ class RecursiveParser
             } elseif (substr($template, $idx, 2) === self::TEMPLATE_START) {
                 // We found a template on which we should not split
                 $argument .= $this->match($template, $numChars, $idx, self::TEMPLATE_START, self::TEMPLATE_END);
+            } elseif (substr($template, $idx, 2) === self::LINK_START) {
+                // We found a link on which we should not split
+                $argument .= $this->match($template, $numChars, $idx, self::LINK_START, self::LINK_END);
             } elseif ($template[$idx] === '|') {
                 // Split when we encounter the delimiter
                 $arguments[] = $argument;
