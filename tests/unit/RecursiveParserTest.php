@@ -290,6 +290,19 @@ class RecursiveParserTest extends TestCase
                     '_text' => '{{Example|Name1={{Example2}}|Name2={{Example3}}}}'
         ]
         ],
+        'template with link' => [
+        '{{Example|Hello [[Wiki:World|World]]!}}',
+        [
+            'Example' => [
+                [
+                    '1' => [
+                        '_text' => 'Hello [[Wiki:World|World]]!'
+                    ],
+                ]
+            ],
+            '_text' => '{{Example|Hello [[Wiki:World|World]]!}}'
+        ]
+        ],
         'multiple templates with different names' => [
         '{{Example}}{{Example2}}',
         [
